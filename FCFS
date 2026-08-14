@@ -1,0 +1,44 @@
+processes = [
+    ["P1", 3, 3],
+    ["P2", 2, 1],
+    ["P3", 5, 2],
+    ["P4", 0, 3],
+    ["P5", 1, 2]
+]
+processes.sort(key=lambda x: x[1])
+current_time = 0
+total_tat = 0
+total_wt = 0
+
+
+print("Process\tArrival\tBurst\tCompletion\tTurnaround\tWaiting")
+
+
+for process, arrival, burst in processes:
+    if current_time < arrival:
+        current_time = arrival
+
+
+    completion = current_time + burst
+    turnaround = completion - arrival
+    waiting = turnaround - burst
+
+
+    total_tat += turnaround
+    total_wt += waiting
+ print(process, "\t", arrival, "\t", burst, "\t",
+          completion, "\t\t", turnaround, "\t\t", waiting)
+
+
+    current_time = completion
+
+
+n = len(processes)
+
+
+average_tat = total_tat / n
+average_wt = total_wt / n
+
+
+print("\nAverage Turnaround Time =", average_tat)
+print("Average Waiting Time =", average_wt)
