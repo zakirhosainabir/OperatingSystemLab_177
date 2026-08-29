@@ -1,0 +1,73 @@
+processes = [
+    ["P1", 0, 7],
+    ["P2", 1, 4],
+    ["P3", 2, 15],
+    ["P4", 3, 11],
+    ["P5", 4, 20],
+    ["P6", 4, 9],
+]
+
+time_quantum = 5
+current_time = 0
+total_turnaroundTime = 0
+total_waitingTime = 0
+
+n = len(processes)
+remaining = []
+for process in processes:
+    remaining.append(process[2])
+print("Process\tArrival\tBurst\tCompletion\tTurnaround\tWaiting")
+
+queue = []
+visited = [False] * n
+completed_count = 0
+while completed_count < n:
+
+    for i in range(n):
+        if processes[i][1] <= current_time and not visited[i]:
+            queue.append(i)
+            visited[i] = True
+
+
+    if not queue:
+        current_time += 1
+        continue
+
+
+    i = queue.pop(0)
+
+
+    if remaining[i] > time_quantum:
+        current_time += time_quantum
+        remaining[i] -= time_quantum
+    else:
+        current_time += remaining[i]
+        remaining[i] = 0
+
+        completion = current_time
+        arrival = processes[i][1]
+        burst = processes[i][2]
+
+        turnaround = completion - arrival
+        waiting = turnaround - burst
+
+        total_turnaroundTime += turnaround
+        total_waitingTime += waiting
+
+        print(processes[i][0], "\t", arrival, "\t", burst, "\t",
+              completion, "\t\t", turnaround, "\t\t", waiting)
+
+        completed_count += 1
+
+    for j in range(n):
+        if processes[j][1] <= current_time and not visited[j]:
+            queue.append(j)
+            visited[j] = True
+
+
+    if remaining[i] > 0:
+        queue.append(i)
+average_turnaroundTime = total_turnaroundTime / n
+average_waitingTime = total_waitingTime / n
+print("\nAverage Turnaround Time =", average_turnaroundTime)
+print("Average Waiting Time =", average_waitingTime)
